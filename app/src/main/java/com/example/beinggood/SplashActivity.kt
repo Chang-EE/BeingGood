@@ -1,25 +1,62 @@
 package com.example.beinggood
-
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.beinggood.LoginActivity
+import com.example.beinggood.R
+import com.example.beinggood.ui.theme.BeingGoodTheme
 
-// 앱 시작 시 가장 먼저 실행되는 화면
-class SplashActivity : AppCompatActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?){
+class SplashActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //activity_splash.xml를 이 activity에 연결
-        setContentView(R.layout.activity_splash)
-
-        //handler를 통해 3초 후 다음 화면으로 이동
+        // 3초 후 LoginActivity로 이동
         Handler(Looper.getMainLooper()).postDelayed({
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent) //화면전환
-            finish() //이 액티비티는 종료. 뒤로가기를 해도 못돌아옴
-        }, 3000) //3000ms = 3sec
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+        }, 3000)
+
+        setContent {
+            BeingGoodTheme {
+                SplashScreen()
+            }
+        }
+    }
+}
+
+@Composable
+fun SplashScreen() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(32.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                contentDescription = "앱 로고",
+                modifier = Modifier.size(200.dp)
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = "Now Loading...",
+                fontSize = 18.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
     }
 }
