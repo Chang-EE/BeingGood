@@ -1,47 +1,50 @@
 package com.example.beinggood.ui.screen
 
+import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.beinggood.ui.model.ExercisePlan
 
 @Composable
 fun WorkoutScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
-        Text("오늘은 어떤 운동을 할까요?", fontSize = 20.sp)
-        Spacer(modifier = Modifier.height(8.dp))
-        Text("타겟 부위를 모두 선택해주세요", fontSize = 14.sp)
+    var isEditingRoutine by remember { mutableStateOf(false) }  // 운동 계획을 설정할지 말지
+    var isDoingWorkout by remember { mutableStateOf(false) }     // 운동을 진행할지 말지
+    var selectedParts by remember { mutableStateOf<List<String>>(emptyList()) } // 선택된 부위
+    var selectedPlans by remember { mutableStateOf<List<ExercisePlan>>(emptyList()) } // 운동 계획 리스트
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        val buttons = listOf("가슴", "팔", "어깨", "등", "하체", "코어")
-        buttons.chunked(3).forEach { row ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                row.forEach { label ->
-                    Button(onClick = { /* TODO: 상태 저장 */ }) {
-                        Text(label)
-                    }
+    when {
+        isDoingWorkout -> { // 운동 중일 때
+            PoseCameraScreen(
+                exerciseName = selectedPlans.firstOrNull()?.name ?: "",  // 운동 이름
+                onFinish = {
+                    // 운동 종료 후
+                    isDoingWorkout = false
+                    isEditingRoutine = false
+                    selectedPlans = emptyList()
                 }
-            }
-            Spacer(modifier = Modifier.height(12.dp))
+            )
         }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Button(onClick = { /* TODO: 운동 시작 */ }) {
-            Text("운동하기")
+        isEditingRoutine -> { // 운동 계획 설정 중일 때
+            RoutineEditScreen(
+                selectedBodyParts = selectedParts,
+                onStartWorkout = { plans ->
+                    // 운동 계획이 설정되면 운동 시작
+                    selectedPlans = plans
+                    isDoingWorkout = true
+                }
+            )
+        }
+        else -> { // 운동 부위 선택 화면
+            BodyPartSelectionScreen(
+                onStartRoutine = { selected ->
+                    selectedParts = selected // 부위 선택 저장
+                    isEditingRoutine = true   // 운동 계획 설정 화면으로 이동
+                }
+            )
         }
     }
 }

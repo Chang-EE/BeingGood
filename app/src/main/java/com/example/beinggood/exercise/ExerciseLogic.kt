@@ -26,4 +26,12 @@ object ExerciseLogic {
         // TODO: 푸시업 기준 위치 분석
         return false
     }
+
+    fun getCounter(name: String): (PoseLandmarkerResult) -> Boolean {
+        return when (name) {
+            "스쿼트" -> ::countSquat
+            // 추후 푸쉬업 등 추가 가능
+            else -> { _ -> false }
+        }
+    }
 }
