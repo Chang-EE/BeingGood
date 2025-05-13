@@ -51,6 +51,13 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.material.icons)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.camerax.core)
+    implementation(libs.camerax.camera2)
+    implementation(libs.camerax.lifecycle)
+    implementation(libs.camerax.view)
+
+    implementation(libs.mediapipe.tasks.vision)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
